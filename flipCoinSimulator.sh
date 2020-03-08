@@ -1,37 +1,34 @@
 #!/bin/bash -x
 
-declare -A singletDict
+declare -A doubletDict
 
-function singlet()
+function doublet()
 	{
 		NoofFlip=$1
-		singletDict[H]=0
-		singletDict[T]=0
-		NoofCoin=1
+		NoofCoin=2
 		for (( i=0;i<$NoofFlip;i++ ))
 		do
+			str=" "
 			for (( j=0;j<$NoofCoin;j++ ))
 			do
-				str=" "
 				CoinFlip=$((RANDOM%2))
 				if [ $CoinFlip -eq 1 ]
 				then
-					str="H"
+					str+="H"
 				else
-					str="T"
+					str+="T"
 				fi
 		done
-	singletDict[$str]=$((${singletDict[$str]}+1))
+	doubletDict[$str]=$((${doubletDict[$str]}+1))
 	done
-	
-	findPercentage
+	findPercentage 
 	}
  
 function findPercentage()
 	{
-		for key in ${!singletDict[@]}
+		for key in ${!doubletDict[@]}
 		do
-			singletDict[$key]=$((${singletDict[$key]}*100/$NoofFlip))
+			doubletDict[$key]=$(echo " ${doubletDict[$key]}/$NoofFlip*100" | bc )
 		done
 	}
  
@@ -39,5 +36,5 @@ read -p "Do you Want to flip a coin (Y/N) :" option
 if [[ $option == "Y" || $option == "y" ]]
 then 
 	read -p "How many Times you want flip a coin : " NoofTimes
-	singlet $NoofTimes
+	doublet $NoofTimes
 fi
