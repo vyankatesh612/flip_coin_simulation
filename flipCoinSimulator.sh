@@ -1,11 +1,11 @@
 #!/bin/bash -x
 
-declare -A tripletDict
+declare -A Dictionary
 
-function triplet()
+function checkCombination()
 	{
 		NoofFlip=$1
-		NoofCoin=3
+		NoofCoin=$2
 		for (( i=0;i<$NoofFlip;i++ ))
 		do
 			str=" "
@@ -19,24 +19,35 @@ function triplet()
 					str+="T"
 				fi
 			done
-			tripletDict[$str]=$((${tripletDict[$str]}+1))
+			Dictionary[$str]=$((${Dictionary[$str]}+1))
 		done
-		echo ${!tripletDict[@]}
-		echo ${tripletDict[@]}
+		echo ${!Dictionary[@]}
+		echo ${Dictionary[@]}
+
 		findPercentage 
 	}
  
 function findPercentage()
 	{
-		for key in ${!tripletDict[@]}
+		for key in ${!Dictionary[@]}
 		do
-			tripletDict[$key]=$(echo "scale=2;${tripletDict[$key]} / $NoofFlip * 100" | bc)
+			Dictionary[$key]=$(echo "scale=2;${Dictionary[$key]} / $NoofFlip * 100" | bc)
+			echo $Dictionary[$key]
 		done
+		
+		sortDict
+	}
+function sortDict()
+	{
+		
+
 	}
  
 read -p "Do you Want to flip a coin (Y/N) :" option
-if [[ $option == "Y" || $option == "y" ]]
-then 
+while [[ $option == "Y" || $option == "y" ]]
+do 
 	read -p "How many Times you want flip a coin : " NoofTimes
-	triplet $NoofTimes
-fi
+	read -p "Enter no of coin : " coin	
+	checkCombination $NoofTimes $coin
+	read -p "Do you Want to continue (Y/N) :" option
+done
