@@ -1,11 +1,11 @@
 #!/bin/bash -x
 
-declare -A doubletDict
+declare -A tripletDict
 
-function doublet()
+function triplet()
 	{
 		NoofFlip=$1
-		NoofCoin=2
+		NoofCoin=3
 		for (( i=0;i<$NoofFlip;i++ ))
 		do
 			str=" "
@@ -18,17 +18,19 @@ function doublet()
 				else
 					str+="T"
 				fi
+			done
+			tripletDict[$str]=$((${tripletDict[$str]}+1))
 		done
-	doubletDict[$str]=$((${doubletDict[$str]}+1))
-	done
-	findPercentage 
+		echo ${!tripletDict[@]}
+		echo ${tripletDict[@]}
+		findPercentage 
 	}
  
 function findPercentage()
 	{
-		for key in ${!doubletDict[@]}
+		for key in ${!tripletDict[@]}
 		do
-			doubletDict[$key]=$(echo " ${doubletDict[$key]}/$NoofFlip*100" | bc )
+			tripletDict[$key]=$(echo "scale=2;${tripletDict[$key]} / $NoofFlip * 100" | bc)
 		done
 	}
  
@@ -36,5 +38,5 @@ read -p "Do you Want to flip a coin (Y/N) :" option
 if [[ $option == "Y" || $option == "y" ]]
 then 
 	read -p "How many Times you want flip a coin : " NoofTimes
-	doublet $NoofTimes
+	triplet $NoofTimes
 fi
